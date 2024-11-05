@@ -14,13 +14,39 @@ enum TOKEN_CAT
     CT_C,
     LT,
     FIM_EXPR,  //verificar
-    FIM_ARQ}; 
+    FIM_ARQ
+}; 
 
 /* Onde: ID: Identificador, SN: Sinal; CT_I: Constante numérica inteira; CT_R: Constante numérica real; CT_C: ; LT: ; */ 
 
 enum PAL_RESERV
 {
-
+    CONST, 
+    PR, 
+    INIT, 
+    ENDP, 
+    CHAR, 
+    INT, 
+    REAL, 
+    BOOL, 
+    DO, 
+    WHILE,
+    ENDW, 
+    VAR, 
+    FROM, 
+    TO,
+    BY,
+    ENDV,
+    IF,
+    ELIF,
+    ELSE,
+    ENDI,
+    GETINT,
+    GETCHAR,
+    GETREAL,
+    PUTINT,
+    PUTCHAR,
+    PUTREAL
 };
 
 enum SINAIS 
@@ -39,12 +65,7 @@ enum SINAIS
     FECHA_COL,
     NEGACAO,
     DIFERENTE,
-    // PONTEIRO,  //verificar
-    PONTO_VIRG,
     VIRGULA,
-    PONTO,
-    //ESCOPO, //verificar
-    DOISPONTOS,
     MAIOR,
     MENOR,
     MAIORIGUAL,
@@ -52,7 +73,6 @@ enum SINAIS
     AND,
     OR,
     ENDERECO
-    //DESTRUTOR //verificar
 }; // Sinais válidos da linguagem 
 
  

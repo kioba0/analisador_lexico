@@ -48,15 +48,20 @@ TOKEN AnaLex(FILE *fd) {
                 }
 
                 //verificar:
-                // else if(c == '\'') estado = 11; // Início de um char
-                // else if (c == '\"') estado = 6; // Início de uma string(literal)  
+                else if(c == '\'') {
+                    estado = 9; // Início de um char
+                }
+                
+                else if (c == '\"') {
+                    estado = 11; // Início de uma string(literal)
+                }  
+                
                 else if(c == '>') estado = 44; 
                 else if(c == '<') estado = 37; 
                 else if (c == '&') estado = 47; 
                 else if (c == '|') estado = 48;
-                // else if (c == ':') estado = 51;  //verificar
                 else if (c == '=') estado = 31;
-                else if (c == '!')estado = 34;
+                else if (c == '!') estado = 34;
                 else if (c == '/') estado = 27; 
 
                 else if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z') {    // inicio de identificador - inicializa lexema 
@@ -69,7 +74,7 @@ TOKEN AnaLex(FILE *fd) {
 
                 } 
 
-                else if (c == '_'){
+                else if (c == '_'){     // inicio de identificador - inicializa lexema
                     estado = 2; 
 
                     lexema[tamL] = c;  
@@ -161,26 +166,12 @@ TOKEN AnaLex(FILE *fd) {
                     return t;
                 }
 
-                else if (c == '.') {    // sinal de ponto
-                    estado = 20; 
-                    t.cat = SN; 
-                    t.codigo = PONTO; 
-                    return t;
-                } 
-
                 else if (c == ',') {    // virgula
                     estado = 21; 
                     t.cat = SN; 
                     t.codigo = VIRGULA; 
                     return t;
                 } 
-
-                else if (c == ';') {    // ponto e virgula
-                    estado = 23; 
-                    t.cat = SN; 
-                    t.codigo = PONTO_VIRG; 
-                    return t;
-                }
 
                 else if (c == '[') {    // abre colchete
                     estado = 18; 
@@ -195,7 +186,6 @@ TOKEN AnaLex(FILE *fd) {
                     t.codigo = FECHA_COL; 
                     return t; 
                 } 
-
 
                 // verificar se tem q por:
                 else if (c == '\n') { 
@@ -218,9 +208,10 @@ TOKEN AnaLex(FILE *fd) {
 
                 } 
 
-                 else
-
+                else{
                     error("Caracter invalido na expressao!");   // sem transicao valida no AFD 
+
+                }
 
                 break; 
 
@@ -233,7 +224,7 @@ TOKEN AnaLex(FILE *fd) {
                 } 
 
                 else {                  // transicao OUTRO* do estado 1 do AFD 
-                
+
                     estado = 3;     // monta token identificador e retorna 
                     ungetc(c, fd); 
                     t.cat = ID; 
@@ -244,30 +235,339 @@ TOKEN AnaLex(FILE *fd) {
 
                 break; 
 
-            case 10:
-                if (c >= '0' && c <= '9') { 
+            case 2:
 
-                    estado = 10; 
+                if (c == '_') {
+                    estado = 2;
+                    lexema[tamL] = c;   // acumula caracteres lidos em lexema 
+                    lexema[++tamL] = '\0'; 
+                }
 
-                    digitos[tamD] = c;      // acumula digitos lidos na variaavel digitos 
+                else if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')){
+                    estado = 1;
+                    lexema[tamL] = c;   // acumula caracteres lidos em lexema 
+                    lexema[++tamL] = '\0'; 
+                }
 
-                        digitos[++tamD] = '\0'; 
+                break;
+   
+            case 4: 
 
-                } 
+                if (c >= '0' && c <= '9') {    
+                    estado = 7; 
+                    digitos[tamD] = c;  
+                    digitos[++tamD] = '\0';
+                }
+                //tem q por erro caso digite errado?
+                break;
 
-                else {                      // transicao OUTRO* do estado 10 do AFD 
+            case 5:
+                if (c >= '0' && c <= '9') {    
+                    estado = 5; 
+                    digitos[tamD] = c;  
+                    digitos[++tamD] = '\0';
+                }
 
-                    estado = 11;        // monta token constante inteira e retorna 
+                else if (c == '.'){
+                    estado = 4; 
+                    digitos[tamD] = c;  
+                    digitos[++tamD] = '\0';
+                }
 
+                else {                 // transicao OUTRO* do estado 5 do AFD 
+
+                    estado = 6;        // monta token constante inteira e retorna 
                     ungetc(c, fd); 
-
                     t.cat = CT_I; 
-
                     t.valor_I = atoi(digitos); 
-
                     return t; 
 
-                } 
+                }
+
+                break;
+
+            case 7:
+                if (c >= '0' && c <= '9') {    
+                    estado = 7; 
+                    digitos[tamD] = c;  
+                    digitos[++tamD] = '\0';
+                }
+                
+                else {                 // transicao OUTRO* do estado 5 do AFD 
+
+                    estado = 6;        // monta token constante inteira e retorna 
+                    ungetc(c, fd); 
+                    t.cat = CT_R; 
+                    t.valor_R = atoi(digitos); 
+                    return t; 
+
+                }
+                //conferir
+
+                break;
+
+            case 9:
+                if (c == '\\'){
+                    estado = 43;
+                    lexema[tamL] = c;   // acumula caracteres lidos em lexema 
+                    lexema[++tamL] = '\0'; 
+                }
+                else if(isprint(c)){
+                    estado = 40;
+                    lexema[tamL] = c;   // acumula caracteres lidos em lexema 
+                    lexema[++tamL] = '\0'; 
+                }
+                
+                break;
+
+            case 11:
+                if (c == '\"'){
+                    estado = 12;
+                    //tem q guardar as ""?
+                    
+                }
+                else if(isprint(c)){                            // (isprint(c) != 0) && (c != '\"') && (c!= '\n')
+                    estado = 11;    //verificar isso
+                    lexema[tamL] = c;   // acumula caracteres lidos em lexema 
+                    lexema[++tamL] = '\0'; 
+                    //verifica se passa do tam max?
+                    if (tamL > TAM_LEXEMA){
+                        error("Tamanho maior que o máximo.");
+                    }
+                    
+                }
+                
+                else {
+                    error("Caracter invalido na expressao!");
+                }
+
+                break;
+
+            case 12:
+                estado = 13;
+                ungetc(c, fd);
+                t.cat = LT;
+                strcpy(t.lexema, lexema);
+                return t;
+
+
+            case 27:    //comentario ou divisão
+                if (c == '/'){
+                    estado = 29;
+                    
+                }
+
+                else{
+                    estado = 28;
+                    ungetc(c, fd);
+                    t.cat = SN; 
+                    t.codigo = DIVISAO;
+                    return t;
+                }
+
+                break;
+
+            case 29:    //comentario
+                if (c == '\n'){
+                    estado = 30;
+                }
+
+                break;
+
+            //verificar
+            case 30:    //comentario volta pro 0
+                estado = 0;
+                ungetc(c, fd);
+                
+                break;
+
+            case 31:    //atribuição ou comparação
+                if (c == '='){
+                    estado = 33;
+                    t.cat = SN; 
+                    t.codigo = COMPARACAO;
+                    return t; 
+                }
+
+                else{
+                    estado = 32;
+                    ungetc(c, fd);
+                    t.cat = SN; 
+                    t.codigo = ATRIB;
+                    return t;
+                }
+
+                break;
+            case 34:    //diferente ou negação
+                if (c == '='){
+                    estado = 35;
+                    t.cat = SN; 
+                    t.codigo = DIFERENTE;
+                    return t; 
+                }
+
+                else{
+                    estado = 36;
+                    ungetc(c, fd);
+                    t.cat = SN; 
+                    t.codigo = NEGACAO;
+                    return t;
+                }
+
+                break;
+            case 37:    //menor ou menor igual
+                if (c == '='){
+                    estado = 39;
+                    t.cat = SN; 
+                    t.codigo = MENORIGUAL;
+                    return t; 
+                }
+
+                else{
+                    estado = 38;
+                    ungetc(c, fd);
+                    t.cat = SN; 
+                    t.codigo = MENOR;
+                    return t;
+                }
+
+                break;
+
+
+            // verificar se está correto esse jeito  case 40 41 42... 
+            //verificar charcon
+            case 40:
+                if (c == '\''){
+                    estado = 10;
+                    t.cat = CT_C;
+                    t.c = lexema[--tamL];   //tem q por esse --? porque?
+                    return t; 
+                }
+
+                else {
+                    error("Caracter invalido na expressao!");
+                }
+                
+                break;
+            
+            case 41:
+                if (c == '\''){
+                    estado = 10;
+                    t.cat = CT_C;
+                    t.c = lexema[--tamL];   //tem q por esse --? porque?
+                    return t; 
+                }
+
+                else {
+                    error("Caracter invalido na expressao!");
+                }
+                
+                break;
+
+            case 42:
+                if (c == '\''){
+                    estado = 10;
+                    t.cat = CT_C;
+                    t.c = lexema[--tamL];   //tem q por esse --? porque?
+                    return t; 
+                }
+
+                else {
+                    error("Caracter invalido na expressao!");
+                }
+                
+                break;
+            case 43: 
+                if (c == 'n'){
+                    estado = 42;
+                    lexema[tamL] = c;   // acumula caracteres lidos em lexema 
+                    lexema[++tamL] = '\0'; 
+                }
+                else if(c == '0'){
+                    estado = 41;
+                    lexema[tamL] = c;   // acumula caracteres lidos em lexema 
+                    lexema[++tamL] = '\0'; 
+                }
+
+                else {
+                    error("Caracter invalido na expressao!");
+                }
+
+                break;
+            case 44:    //maior ou maior igual
+                if (c == '='){
+                    estado = 46;
+                    t.cat = SN; 
+                    t.codigo = MAIORIGUAL;
+                    return t; 
+                }
+
+                else{
+                    estado = 45;
+                    ungetc(c, fd);
+                    t.cat = SN; 
+                    t.codigo = MAIOR;
+                    return t;
+                }
+
+                break;
+                
+            case 47:    //endereço ou AND
+                if (c == '&'){
+                    estado = 51;
+                    t.cat = SN; 
+                    t.codigo = AND;
+                    return t; 
+                }
+
+                else{
+                    estado = 50;
+                    ungetc(c, fd);
+                    t.cat = SN; 
+                    t.codigo = ENDERECO;
+                    return t;
+                }
+
+                break;
+
+            case 48:    //OR
+                if(c == '|'){
+                    estado = 49;
+                    t.cat = SN; 
+                    t.codigo = OR;
+                    return t; 
+                }
+        
+                else {
+                    error("Caracter invalido na expressao!");
+                }
+
+                break;
+
+            // case 10:
+            //     if (c >= '0' && c <= '9') { 
+
+            //         estado = 10; 
+
+            //         digitos[tamD] = c;      // acumula digitos lidos na variaavel digitos 
+
+            //         digitos[++tamD] = '\0'; 
+
+            //     } 
+
+            //     else {                      // transicao OUTRO* do estado 10 do AFD 
+
+            //         estado = 11;        // monta token constante inteira e retorna 
+
+            //         ungetc(c, fd); 
+
+            //         t.cat = CT_I; 
+
+            //         t.valor_I = atoi(digitos); 
+
+            //         return t; 
+
+            //     } 
 
         }
 
