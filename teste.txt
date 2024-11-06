@@ -65,4 +65,4 @@ init
     endw
     '\n'
     var loop from array to &outroArray by numero endv
-    char a //testando 
+    char a //testando

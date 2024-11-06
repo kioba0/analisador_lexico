@@ -15,7 +15,7 @@ void error(char msg[]) {
     exit(1); 
 } 
 
-int verificarReservadas(char reservadas[][23] , char string[]){
+int verificarReservadas(char reservadas[][28] , char string[]){
     for(int i = 0 ; i < 23 ; i++){
         if(strcmp(reservadas[i] , string) == 0){
           return i;
@@ -27,7 +27,7 @@ int verificarReservadas(char reservadas[][23] , char string[]){
 
 TOKEN AnaLex(FILE *fd) { 
 
-    char reservadas[23][23] = {"const", "pr", "init", "endp", "char", "real", "int", "bool", "do", "while", "endw", "var", "from", "dt", "to", "by", "if", "endv", "elif", "else", "endi", "getout", "putreal"};
+    char reservadas[28][28] = {"const", "pr", "init", "endp", "char", "real", "int", "bool", "do", "while", "endw", "var", "from", "dt", "to", "by", "if", "endv", "elif", "else", "endi", "getout", "putreal", "getint", "getreal", "getchar", "putint", "putchar"};
 
     int estado; 
 
@@ -417,6 +417,11 @@ TOKEN AnaLex(FILE *fd) {
             case 29:    //comentario
                 if (c == '\n'){
                     estado = 30;
+                }
+
+                else if(c == EOF){
+                    t.cat = FIM_ARQ;
+                    return t;
                 }
 
                 break;
