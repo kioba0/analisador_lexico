@@ -22,7 +22,7 @@ enum TOKEN_CAT
 enum PAL_RESERV
 {
     CONST, 
-    PR, 
+    // PR, 
     INIT, 
     ENDP, 
     CHAR, 

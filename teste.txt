@@ -1,0 +1,25 @@
+_IssoEID_ // ID
+while // PR
++ // adicao
+- // subtracao
+/ // divisao
+= // atribuicao
+! // negacao
+* // multiplicacao
+& // E
+&& // and
+|| // or
+< // menor que
+> // maior que
+== // igual
+!= // diferente
+<= // menor ou igual
+>= // maior ou igual
+( // abre parenteses
+) // fecha parenteses
+{ // abre chaves
+} // fecha chaves
+[ // abre colchetes
+] // fecha colchetes
+, // virgula
+15 // constante inteira

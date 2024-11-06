@@ -579,7 +579,7 @@ TOKEN AnaLex(FILE *fd) {
 
 int main() { 
 
- 
+    printf("teste");
 
     FILE *fd; 
 
@@ -587,9 +587,9 @@ int main() {
 
  
 
-    if ((fd=fopen("expressao.dat", "r")) == NULL) 
+    if ((fd=fopen("teste.txt", "r")) == NULL) 
 
-        error("Arquivo de entrada da expressao nao encontrado!"); 
+        error("Erro ao abrir o arquivo"); 
 
   
 
@@ -639,14 +639,84 @@ int main() {
 
                         break; 
 
+                    case COMPARACAO: 
+                        printf("<SN, COMPARACAO> "); 
+                        break; 
+
+                    case ABRE_CHAVE: 
+                        printf("<SN, ABRE_CHAVE> "); 
+                        break; 
+
+                    case FECHA_CHAVE: 
+                        printf("<SN, FECHA_CHAVE> "); 
+                        break; 
+
+                    case ABRE_COL: 
+                        printf("<SN, ABRE_COL> "); 
+                        break; 
+
+                    case FECHA_COL: 
+                        printf("<SN, FECHA_COL> "); 
+                        break;
+
+                    case NEGACAO: 
+                        printf("<SN, NEGACAO> "); 
+                        break;
+
+                    case DIFERENTE:
+                        printf("<SN, DIFERENTE> "); 
+                        break;
+                    
+                    case VIRGULA:
+                        printf("<SN, VIRGULA> "); 
+                        break;
+
+                    case MAIOR:
+                        printf("<SN, MAIOR> "); 
+                        break;
+                    
+                    case MENOR:
+                        printf("<SN, MENOR> "); 
+                        break;
+                    
+                    case MAIORIGUAL:
+                        printf("<SN, MAIORIGUAL> "); 
+                        break;
+                    
+                    case MENORIGUAL:
+                        printf("<SN, MENORIGUAL> "); 
+                        break;
+                        
+                    case AND:
+                        printf("<SN, AND> "); 
+                        break;
+
+                    case OR:
+                        printf("<SN, OR> "); 
+                        break;
+
+                    case ENDERECO:
+                        printf("<SN, ENDERECO> "); 
+                        break;
                 } 
 
                 break; 
 
-            case CT_I: printf("<CT_I, %d> ", tk.valor_I); 
-
+            case CT_I: 
+                printf("<CT_I, %d> ", tk.valor_I); 
                 break; 
 
+            case CT_R:
+                printf("<CT_R, %f>\n", tk.valor_R);
+                break ;
+            case CT_C:
+                printf("<CT_C, %c> \n", tk.c);
+                break ;
+            case LT:
+                printf("<LT, %s> \n", tk.lexema);
+                break ;
+
+            // verificar
             case FIM_EXPR: printf("<FIM_EXPR, %d>\n", 0); 
 
                 printf("LINHA %d: ", contLinha); 
