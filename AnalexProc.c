@@ -15,11 +15,19 @@ void error(char msg[]) {
     exit(1); 
 } 
 
- 
+int verificarReservadas(char reservadas[][23] , char string[]){
+    for(int i = 0 ; i < 23 ; i++){
+        if(strcmp(reservadas[i] , string) == 0){
+          return i;
+        }
+    }
+
+    return -1;
+}
 
 TOKEN AnaLex(FILE *fd) { 
 
-
+    char reservadas[23][23] = {"const", "pr", "init", "endp", "char", "real", "int", "bool", "do", "while", "endw", "var", "from", "dt", "to", "by", "if", "endv", "elif", "else", "endi", "getout", "putreal"};
 
     int estado; 
 
@@ -47,7 +55,6 @@ TOKEN AnaLex(FILE *fd) {
                     estado = 0; 
                 }
 
-                //verificar:
                 else if(c == '\'') {
                     estado = 9; // Início de um char
                 }
@@ -187,7 +194,6 @@ TOKEN AnaLex(FILE *fd) {
                     return t; 
                 } 
 
-                // verificar se tem q por:
                 else if (c == '\n') { 
 
                     estado = 0; 
@@ -227,7 +233,13 @@ TOKEN AnaLex(FILE *fd) {
 
                     estado = 3;     // monta token identificador e retorna 
                     ungetc(c, fd); 
-                    t.cat = ID; 
+                    // verificar id ou pr
+                    if((verificarReservadas(reservadas, lexema) != -1)){
+                        t.cat = PVR;
+                    } else{
+                        t.cat = ID; 
+                    }
+                    
                     strcpy(t.lexema, lexema); 
                     return t; 
 
@@ -298,11 +310,10 @@ TOKEN AnaLex(FILE *fd) {
                     estado = 6;        // monta token constante inteira e retorna 
                     ungetc(c, fd); 
                     t.cat = CT_R; 
-                    t.valor_R = atoi(digitos); 
+                    t.valor_R = atof(digitos); 
                     return t; 
 
                 }
-                //conferir
 
                 break;
 
@@ -312,7 +323,7 @@ TOKEN AnaLex(FILE *fd) {
                     lexema[tamL] = c;   // acumula caracteres lidos em lexema 
                     lexema[++tamL] = '\0'; 
                 }
-                else if(isprint(c)){
+                else if((isprint(c) != 0) && (c != '\"') && (c!= '\n')){
                     estado = 40;
                     lexema[tamL] = c;   // acumula caracteres lidos em lexema 
                     lexema[++tamL] = '\0'; 
@@ -320,13 +331,32 @@ TOKEN AnaLex(FILE *fd) {
                 
                 break;
 
+            // case 9:
+            //     if (c == '\n'){
+            //         estado = 42;
+            //         lexema[tamL] = c;   // acumula caracteres lidos em lexema 
+            //         lexema[++tamL] = '\0'; 
+            //     }
+            //     else if (c == '\0'){
+            //         estado = 41;
+            //         lexema[tamL] = c;   // acumula caracteres lidos em lexema 
+            //         lexema[++tamL] = '\0'; 
+            //     }
+            //     else if((isprint(c) != 0) && (c != '\"') && (c!= '\n')){
+            //         estado = 40;
+            //         lexema[tamL] = c;   // acumula caracteres lidos em lexema 
+            //         lexema[++tamL] = '\0'; 
+            //     }
+                
+            //     break;
+
             case 11:
                 if (c == '\"'){
                     estado = 12;
-                    //tem q guardar as ""?
                     
                 }
-                else if(isprint(c)){                            // (isprint(c) != 0) && (c != '\"') && (c!= '\n')
+                
+                else if((isprint(c) != 0) && (c != '\"') && (c!= '\n')){             
                     estado = 11;    //verificar isso
                     lexema[tamL] = c;   // acumula caracteres lidos em lexema 
                     lexema[++tamL] = '\0'; 
@@ -442,6 +472,9 @@ TOKEN AnaLex(FILE *fd) {
                     t.cat = CT_C;
                     t.c = lexema[--tamL];   //tem q por esse --? porque?
                     return t; 
+
+                    // strcpy(t.c, lexema);
+                    // return t;
                 }
 
                 else {
@@ -454,7 +487,9 @@ TOKEN AnaLex(FILE *fd) {
                 if (c == '\''){
                     estado = 10;
                     t.cat = CT_C;
-                    t.c = lexema[--tamL];   //tem q por esse --? porque?
+                    t.c = '\0';
+                    // t.c = lexema[--tamL];
+                    // strcpy(t.c, lexema);
                     return t; 
                 }
 
@@ -468,7 +503,9 @@ TOKEN AnaLex(FILE *fd) {
                 if (c == '\''){
                     estado = 10;
                     t.cat = CT_C;
-                    t.c = lexema[--tamL];   //tem q por esse --? porque?
+                    t.c = '\n';
+                    // t.c = lexema[--tamL];   //tem q por esse --? porque?
+                    // strcpy(t.c, lexema);
                     return t; 
                 }
 
@@ -494,6 +531,7 @@ TOKEN AnaLex(FILE *fd) {
                 }
 
                 break;
+
             case 44:    //maior ou maior igual
                 if (c == '='){
                     estado = 46;
@@ -544,31 +582,6 @@ TOKEN AnaLex(FILE *fd) {
 
                 break;
 
-            // case 10:
-            //     if (c >= '0' && c <= '9') { 
-
-            //         estado = 10; 
-
-            //         digitos[tamD] = c;      // acumula digitos lidos na variaavel digitos 
-
-            //         digitos[++tamD] = '\0'; 
-
-            //     } 
-
-            //     else {                      // transicao OUTRO* do estado 10 do AFD 
-
-            //         estado = 11;        // monta token constante inteira e retorna 
-
-            //         ungetc(c, fd); 
-
-            //         t.cat = CT_I; 
-
-            //         t.valor_I = atoi(digitos); 
-
-            //         return t; 
-
-            //     } 
-
         }
 
     } 
@@ -578,8 +591,6 @@ TOKEN AnaLex(FILE *fd) {
  
 
 int main() { 
-
-    printf("teste");
 
     FILE *fd; 
 
@@ -593,17 +604,17 @@ int main() {
 
   
 
-    printf("LINHA %d: ", contLinha); 
+    // printf("LINHA %d: ", contLinha); 
 
 
 
-    while (1) {    // laço infinito para processar a expressão até o fim de arquivo 
+     while (1) {    // laço infinito para processar a expressão até o fim de arquivo 
 
         tk = AnaLex(fd); 
 
         switch (tk.cat) { 
 
-            case ID: printf("<ID, %s> ", tk.lexema); 
+            case ID: printf("<ID, %s> \n ", tk.lexema); 
 
                 break; 
 
@@ -611,119 +622,127 @@ int main() {
             
                 switch (tk.codigo) { 
 
-                    case ADICAO: printf("<SN, ADICAO> "); 
+                    case ADICAO: printf("<SN, ADICAO>\n "); 
 
                         break; 
 
-                    case SUBTRACAO: printf("<SN, SUBTRACAO> "); 
+                    case SUBTRACAO: printf("<SN, SUBTRACAO>\n "); 
 
                         break; 
 
-                    case MULTIPLIC: printf("<SN, MULTIPLICACAO> "); 
+                    case MULTIPLIC: printf("<SN, MULTIPLICACAO>\n "); 
 
                         break; 
 
-                    case DIVISAO: printf("<SN, DIVISAO> "); 
+                    case DIVISAO: printf("<SN, DIVISAO>\n "); 
 
                         break; 
 
-                    case ATRIB: printf("<SN, ATRIBUICAO> "); 
+                    case ATRIB: printf("<SN, ATRIBUICAO>\n "); 
 
                         break; 
 
-                    case ABRE_PAR: printf("<SN, ABRE_PARENTESES> "); 
+                    case ABRE_PAR: printf("<SN, ABRE_PARENTESES>\n "); 
 
                         break; 
 
-                    case FECHA_PAR: printf("<SN, FECHA_PARENTESES> "); 
+                    case FECHA_PAR: printf("<SN, FECHA_PARENTESES>\n "); 
 
                         break; 
 
                     case COMPARACAO: 
-                        printf("<SN, COMPARACAO> "); 
+                        printf("<SN, COMPARACAO>\n "); 
                         break; 
 
                     case ABRE_CHAVE: 
-                        printf("<SN, ABRE_CHAVE> "); 
+                        printf("<SN, ABRE_CHAVE>\n "); 
                         break; 
 
                     case FECHA_CHAVE: 
-                        printf("<SN, FECHA_CHAVE> "); 
+                        printf("<SN, FECHA_CHAVE>\n "); 
                         break; 
 
                     case ABRE_COL: 
-                        printf("<SN, ABRE_COL> "); 
+                        printf("<SN, ABRE_COL>\n "); 
                         break; 
 
                     case FECHA_COL: 
-                        printf("<SN, FECHA_COL> "); 
+                        printf("<SN, FECHA_COL>\n "); 
                         break;
 
                     case NEGACAO: 
-                        printf("<SN, NEGACAO> "); 
+                        printf("<SN, NEGACAO>\n "); 
                         break;
 
                     case DIFERENTE:
-                        printf("<SN, DIFERENTE> "); 
+                        printf("<SN, DIFERENTE>\n "); 
                         break;
                     
                     case VIRGULA:
-                        printf("<SN, VIRGULA> "); 
+                        printf("<SN, VIRGULA>\n "); 
                         break;
 
                     case MAIOR:
-                        printf("<SN, MAIOR> "); 
+                        printf("<SN, MAIOR>\n "); 
                         break;
                     
                     case MENOR:
-                        printf("<SN, MENOR> "); 
+                        printf("<SN, MENOR>\n "); 
                         break;
                     
                     case MAIORIGUAL:
-                        printf("<SN, MAIORIGUAL> "); 
+                        printf("<SN, MAIORIGUAL>\n "); 
                         break;
                     
                     case MENORIGUAL:
-                        printf("<SN, MENORIGUAL> "); 
+                        printf("<SN, MENORIGUAL>\n "); 
                         break;
                         
                     case AND:
-                        printf("<SN, AND> "); 
+                        printf("<SN, AND>\n "); 
                         break;
 
                     case OR:
-                        printf("<SN, OR> "); 
+                        printf("<SN, OR>\n "); 
                         break;
 
                     case ENDERECO:
-                        printf("<SN, ENDERECO> "); 
+                        printf("<SN, ENDERECO>\n "); 
                         break;
                 } 
 
                 break; 
 
             case CT_I: 
-                printf("<CT_I, %d> ", tk.valor_I); 
+                printf("<CT_I, %d>\n " , tk.valor_I); 
                 break; 
 
             case CT_R:
-                printf("<CT_R, %f>\n", tk.valor_R);
+                printf("<CT_R, %f>\n ", tk.valor_R);
                 break ;
+
             case CT_C:
-                printf("<CT_C, %c> \n", tk.c);
+                printf("<CT_C, %c> \n ", tk.c);
                 break ;
+
             case LT:
-                printf("<LT, %s> \n", tk.lexema);
+                printf("<LT, %s> \n ", tk.lexema);
                 break ;
 
-            // verificar
-            case FIM_EXPR: printf("<FIM_EXPR, %d>\n", 0); 
-
-                printf("LINHA %d: ", contLinha); 
-
+            case PVR:
+                printf("<PVR, %s> \n", tk.lexema);
                 break;
 
-            case FIM_ARQ: printf(" <Fim do arquivo encontrado>\n"); 
+
+            // verificar
+            // case FIM_EXPR: printf("<FIM_EXPR, %d>\n", 0); 
+
+            //     printf("\n %d: ", contLinha); 
+
+            //     break;
+
+            case FIM_ARQ: printf("<Fim do arquivo encontrado>\n "); 
+                break;
 
         } 
 

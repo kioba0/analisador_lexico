@@ -8,7 +8,7 @@ enum TOKEN_CAT
 {
     ID=1, 
     SN,
-    PR, 
+    PVR, 
     CT_I, 
     CT_R,
     CT_C,
@@ -21,8 +21,8 @@ enum TOKEN_CAT
 
 enum PAL_RESERV
 {
-    CONST, 
-    // PR, 
+    CONST =1, 
+    PR, 
     INIT, 
     ENDP, 
     CHAR, 

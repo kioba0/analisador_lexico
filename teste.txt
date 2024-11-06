@@ -1,6 +1,20 @@
-_IssoEID_ // ID
+"caio"
+'M'
+13.123
+1_aa
+_ID_ // ID
+    // tab
+
+
 while // PR
+"teste"
+
+'\n'
+idasc_
+
+// SINAIS
 + // adicao
+'\0'
 - // subtracao
 / // divisao
 = // atribuicao
@@ -10,6 +24,8 @@ while // PR
 && // and
 || // or
 < // menor que
+
+"baba"
 > // maior que
 == // igual
 != // diferente
@@ -23,3 +39,29 @@ while // PR
 ] // fecha colchetes
 , // virgula
 15 // constante inteira
+
+WHILE // PVR
+
+
+
+
+init
+    //Esse código n faz nada
+    'a' //Erro
+    real palavra = 2.5
+    int a = 10
+    int b = 34
+    int c = a + b
+    int arraySuper[20]
+    char _variavel = 'a'    
+    char dado = "eai"
+    real teste = 3.2
+
+    while (c >= a)
+        if b + a + 1 > c
+        getint 2
+        endi
+    endw
+    '\n'
+    var loop from array to &outroArray by numero endv
+    char a //testando 
