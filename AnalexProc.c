@@ -261,6 +261,11 @@ TOKEN AnaLex(FILE *fd) {
                     lexema[++tamL] = '\0'; 
                 }
 
+                else{
+                    error("Caracter invalido na expressao!");   // sem transicao valida no AFD 
+
+                }
+
                 break;
    
             case 4: 
@@ -270,7 +275,12 @@ TOKEN AnaLex(FILE *fd) {
                     digitos[tamD] = c;  
                     digitos[++tamD] = '\0';
                 }
-                //tem q por erro caso digite errado?
+                
+                else{
+                    error("Caracter invalido na expressao!");   // sem transicao valida no AFD 
+
+                }
+
                 break;
 
             case 5:
@@ -305,7 +315,7 @@ TOKEN AnaLex(FILE *fd) {
                     digitos[++tamD] = '\0';
                 }
                 
-                else {                 // transicao OUTRO* do estado 5 do AFD 
+                else {                 // transicao OUTRO* do estado 7 do AFD 
 
                     estado = 6;        // monta token constante inteira e retorna 
                     ungetc(c, fd); 
@@ -328,6 +338,10 @@ TOKEN AnaLex(FILE *fd) {
                     lexema[tamL] = c;   // acumula caracteres lidos em lexema 
                     lexema[++tamL] = '\0'; 
                 }
+
+                else {
+                    error("Caracter invalido na expressao!");
+                }
                 
                 break;
 
@@ -347,6 +361,10 @@ TOKEN AnaLex(FILE *fd) {
             //         lexema[tamL] = c;   // acumula caracteres lidos em lexema 
             //         lexema[++tamL] = '\0'; 
             //     }
+
+            //     else {
+            //         error("Caracter invalido na expressao!");
+            //     }
                 
             //     break;
 
@@ -357,10 +375,9 @@ TOKEN AnaLex(FILE *fd) {
                 }
                 
                 else if((isprint(c) != 0) && (c != '\"') && (c!= '\n')){             
-                    estado = 11;    //verificar isso
+                    estado = 11;   
                     lexema[tamL] = c;   // acumula caracteres lidos em lexema 
                     lexema[++tamL] = '\0'; 
-                    //verifica se passa do tam max?
                     if (tamL > TAM_LEXEMA){
                         error("Tamanho maior que o máximo.");
                     }
@@ -387,7 +404,7 @@ TOKEN AnaLex(FILE *fd) {
                     
                 }
 
-                else{
+                else{               // transicao OUTRO* do estado 27 do AFD 
                     estado = 28;
                     ungetc(c, fd);
                     t.cat = SN; 
@@ -405,7 +422,7 @@ TOKEN AnaLex(FILE *fd) {
                 break;
 
             //verificar
-            case 30:    //comentario volta pro 0
+            case 30:    //comentario volta pro 0        // transicao OUTRO* do estado 30 do AFD 
                 estado = 0;
                 ungetc(c, fd);
                 
@@ -419,7 +436,7 @@ TOKEN AnaLex(FILE *fd) {
                     return t; 
                 }
 
-                else{
+                else{               // transicao OUTRO* do estado 31 do AFD 
                     estado = 32;
                     ungetc(c, fd);
                     t.cat = SN; 
@@ -436,7 +453,7 @@ TOKEN AnaLex(FILE *fd) {
                     return t; 
                 }
 
-                else{
+                else{               // transicao OUTRO* do estado 34 do AFD 
                     estado = 36;
                     ungetc(c, fd);
                     t.cat = SN; 
@@ -453,7 +470,7 @@ TOKEN AnaLex(FILE *fd) {
                     return t; 
                 }
 
-                else{
+                else{               // transicao OUTRO* do estado 37 do AFD 
                     estado = 38;
                     ungetc(c, fd);
                     t.cat = SN; 
@@ -540,7 +557,7 @@ TOKEN AnaLex(FILE *fd) {
                     return t; 
                 }
 
-                else{
+                else{                   // transicao OUTRO* do estado 45 do AFD 
                     estado = 45;
                     ungetc(c, fd);
                     t.cat = SN; 
@@ -558,7 +575,7 @@ TOKEN AnaLex(FILE *fd) {
                     return t; 
                 }
 
-                else{
+                else{                   // transicao OUTRO* do estado 47 do AFD 
                     estado = 50;
                     ungetc(c, fd);
                     t.cat = SN; 
