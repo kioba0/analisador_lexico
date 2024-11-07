@@ -3,57 +3,26 @@
 13.123
 1_aa
 _ID_ // ID
+
     // tab
 
 ""
 
 while // PR
+
 "teste"
 
 '\n'
 idasc_
 
-// SINAIS
-+ // adicao
-'\0'
-- // subtracao
-/ // divisao
-= // atribuicao
-! // negacao
-* // multiplicacao
-& // E
-&& // and
-|| // or
-< // menor que
+"const" "pr"
 
-"baba"
-> // maior que
-== // igual
-!= // diferente
-<= // menor ou igual
->= // maior ou igual
-( // abre parenteses
-) // fecha parenteses
-{ // abre chaves
-} // fecha chaves
-[ // abre colchetes
-] // fecha colchetes
-, // virgula
-15 // constante inteira
+"init", "endp"
 
-WHILE // PVR
+"char", "int",
 
 
-
-
-init
-    //Esse código n faz nada
-    'a' //Erro
-    real palavra = 2.5
-    int a = 10
-    int b = 34
-    int c = a + b
-    int arraySuper[20]
+int arraySuper[20]
     char _variavel = 'a'    
     char dado = "eai"
     real teste = 3.2
@@ -65,4 +34,31 @@ init
     endw
     '\n'
     var loop from array to &outroArray by numero endv
-    char a //testando
+    
+char a //testando
+
+// SINAIS
+
++ 
+'\0'
+- 
+/ 
+= 
+!
+* 
+& 
+&& 
+|| 
+< 
+"baba"
+> 
+== 
+!= 
+<= 
+>= 
+( ) { } 
+[ 
+] 
+, 
+15 
+WHILE // ID
